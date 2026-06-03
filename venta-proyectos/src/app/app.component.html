@@ -1,3 +1,28 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu contentId="main-content" type="overlay">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menú Principal</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-menu-toggle auto-hide="false">
+          <ion-item button="true" routerLink="/compradores" routerDirection="forward" lines="none">
+            <ion-icon name="people-outline" slot="start"></ion-icon>
+            <ion-label>COMPRADORES</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        
+        <ion-menu-toggle auto-hide="false">
+          <ion-item button="true" routerLink="/vendedores" routerDirection="forward" lines="none">
+            <ion-icon name="hardware-chip-outline" slot="start"></ion-icon>
+            <ion-label>VENDEDORES</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-router-outlet id="main-content"></ion-router-outlet>
 </ion-app>

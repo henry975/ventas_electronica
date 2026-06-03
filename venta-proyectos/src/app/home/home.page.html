@@ -1,20 +1,25 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Inicio</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+<ion-content class="ion-padding">
+  <div class="welcome-container" style="text-align: center; margin-bottom: 20px;">
+    <h1>Venta de Proyectos de Electrónica</h1>
+    <p>Plataforma centralizada para la gestión de compra y venta de componentes, circuitos y sistemas electrónicos.</p>
   </div>
+
+  <ion-card>
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Placa electrónica" />
+    <ion-card-header>
+      <ion-card-title>Innovación y Desarrollo</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Encuentra desde microcontroladores hasta sensores avanzados. Usa el menú superior izquierdo para comenzar a gestionar el inventario.
+    </ion-card-content>
+  </ion-card>
 </ion-content>
