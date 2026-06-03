@@ -8,7 +8,8 @@ import { peopleOutline, hardwareChipOutline } from 'ionicons/icons';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   standalone: true,
-  imports: [IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonIcon, IonLabel, IonMenuToggle],
+  // ¡Aquí estaba el detalle! Añadí RouterLink al final de esta lista:
+  imports: [IonApp, IonRouterOutlet, IonMenu, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonIcon, IonLabel, IonMenuToggle, RouterLink],
 })
 export class AppComponent {
   constructor() {
