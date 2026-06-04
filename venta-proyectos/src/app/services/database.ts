@@ -8,7 +8,6 @@ import { Comprador, Vendedor } from '../models/interfaces';
 })
 export class DatabaseService {
 
-  // Creamos "contenedores" reactivos para los datos
   private compradoresSub = new BehaviorSubject<Comprador[]>([]);
   public compradores$ = this.compradoresSub.asObservable();
 
@@ -16,7 +15,6 @@ export class DatabaseService {
   public vendedores$ = this.vendedoresSub.asObservable();
 
   constructor(private firestore: Firestore) {
-    // 🚀 MÉTODO INFALIBLE: onSnapshot lee en tiempo real y evita el error '_Query'
     onSnapshot(collection(this.firestore, 'compradores'), (snapshot) => {
       const datos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Comprador));
       this.compradoresSub.next(datos); // Actualiza la app al instante

@@ -50,7 +50,6 @@ export class CompradoresPage implements OnInit, OnDestroy {
   }
 
   cargarDatos() {
-      // Ahora llamamos a la propiedad compradores$ en lugar del método antiguo
       this.sub = this.dbService.compradores$.subscribe((res: Comprador[]) => {
         this.listaCompradores = res;
         this.buscar(); 

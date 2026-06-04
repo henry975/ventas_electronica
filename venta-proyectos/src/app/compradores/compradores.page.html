@@ -65,6 +65,7 @@
       <ion-item *ngFor="let item of listaFiltrada">
         <ion-label>
           <h2>{{ item.nombres }} {{ item.apellidos }}</h2>
+          <p>Domicilio: {{ item.domicilio }}</p>
         </ion-label>
         
         <ion-buttons slot="end">

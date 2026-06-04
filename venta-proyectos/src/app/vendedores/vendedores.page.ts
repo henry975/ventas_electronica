@@ -50,7 +50,6 @@ export class VendedoresPage implements OnInit, OnDestroy {
   }
 
   cargarDatos() {
-      // Ahora llamamos a la propiedad vendedores$
       this.sub = this.dbService.vendedores$.subscribe((res: Vendedor[]) => {
         this.listaVendedores = res;
         this.buscar();
@@ -123,7 +122,6 @@ export class VendedoresPage implements OnInit, OnDestroy {
   }
 
   buscar() {
-        // Blindaje 1: Verifica que el buscador no esté nulo
         const termino = this.terminoBusqueda ? this.terminoBusqueda.toLowerCase().trim() : '';
         
         if (termino === '') {
@@ -131,7 +129,6 @@ export class VendedoresPage implements OnInit, OnDestroy {
           return;
         }
         
-        // Blindaje 2: Verifica que el dato de Firebase exista antes de aplicar toLowerCase()
         this.listaFiltrada = this.listaVendedores.filter(v => 
           (v.nombres && v.nombres.toLowerCase().includes(termino)) ||
           (v.apellidos && v.apellidos.toLowerCase().includes(termino)) ||
