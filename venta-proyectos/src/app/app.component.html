@@ -7,19 +7,28 @@
     </ion-header>
     <ion-content>
       <ion-list>
+        
         <ion-menu-toggle auto-hide="false">
-          <ion-item button="true" routerLink="/compradores" routerDirection="forward" lines="none">
+          <ion-item button="true" routerLink="/home" routerDirection="root" lines="none">
+            <ion-icon name="home-outline" slot="start"></ion-icon>
+            <ion-label>INICIO</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-menu-toggle auto-hide="false">
+          <ion-item button="true" routerLink="/compradores" routerDirection="root" lines="none">
             <ion-icon name="people-outline" slot="start"></ion-icon>
             <ion-label>COMPRADORES</ion-label>
           </ion-item>
         </ion-menu-toggle>
         
         <ion-menu-toggle auto-hide="false">
-          <ion-item button="true" routerLink="/vendedores" routerDirection="forward" lines="none">
+          <ion-item button="true" routerLink="/vendedores" routerDirection="root" lines="none">
             <ion-icon name="hardware-chip-outline" slot="start"></ion-icon>
             <ion-label>VENDEDORES</ion-label>
           </ion-item>
         </ion-menu-toggle>
+
       </ion-list>
     </ion-content>
   </ion-menu>

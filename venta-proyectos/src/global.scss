@@ -35,3 +35,32 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* Efectos sutiles y modernos para los botones */
+ion-button {
+  &::part(native) {
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  
+  /* Aclara el botón ligeramente al pasar el cursor */
+  &::part(native):hover {
+    filter: brightness(1.1); 
+  }
+
+  /* Efecto de hundimiento físico al pulsar */
+  &::part(native):active {
+    transform: scale(0.97); 
+  }
+}
+
+/* Efecto hover elegante para las opciones del menú lateral */
+ion-item[button="true"] {
+  &::part(native) {
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  &::part(native):hover {
+    /* Fondo esmeralda muy transparente al pasar el mouse */
+    background-color: rgba(16, 185, 129, 0.08); 
+  }
+}

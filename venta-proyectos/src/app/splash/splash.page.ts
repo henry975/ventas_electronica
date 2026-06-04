@@ -17,14 +17,12 @@ export class SplashPage implements OnInit, OnDestroy {
   constructor(private router: Router) { }
 
   ngOnInit() {
-    // Redirección exacta a los 10 segundos
     this.timeoutId = setTimeout(() => {
       this.router.navigateByUrl('/home', { replaceUrl: true });
-    }, 10000);
+    }, 5000);
   }
 
   ngOnDestroy() {
-    // Liberación de memoria 
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }

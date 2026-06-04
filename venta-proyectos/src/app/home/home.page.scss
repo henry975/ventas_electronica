@@ -1,27 +1,37 @@
-#container {
+.welcome-container {
   text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  h1 {
+    font-weight: bold;
+    color: var(--ion-color-secondary); /* Usa el esmeralda oscuro */
+  }
+  p {
+    color: #666;
+  }
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.card-container {
+  display: flex;
+  justify-content: center; /* Centra la tarjeta horizontalmente */
+  width: 100%;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+.custom-card {
+  max-width: 450px; /* Limita el ancho máximo para que no se deforme */
+  width: 100%;
+  border-radius: 12px; /* Bordes más redondeados y modernos */
+  box-shadow: 0px 8px 24px rgba(16, 185, 129, 0.18); /* Sombra con un toque esmeralda */
+  
+  img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover; /* Recorta la imagen sin aplastarla ni estirarla */
+  }
 
-  color: #8c8c8c;
-
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
+  ion-card-title {
+    color: var(--ion-color-primary);
+    font-weight: 600;
+  }
 }
