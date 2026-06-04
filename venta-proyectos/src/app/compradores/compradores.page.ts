@@ -16,20 +16,16 @@ import { listOutline, searchOutline, createOutline, trashOutline, saveOutline, c
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class CompradoresPage implements OnInit, OnDestroy {
-  // Objeto para el formulario
   comprador: Comprador = { nombres: '', apellidos: '', cedula: '', edad: null, domicilio: '' };
   
-  // Listas de datos
   listaCompradores: Comprador[] = [];
   listaFiltrada: Comprador[] = [];
   
-  // Controles de la interfaz
-  vistaDatos: boolean = false; // false = Formulario, true = Lista
+  vistaDatos: boolean = false;
   modoEdicion: boolean = false;
   idEdicion: string = '';
   terminoBusqueda: string = '';
 
-  // Suscripción para limpiar memoria
   private sub: Subscription = new Subscription();
 
   constructor(
@@ -44,7 +40,6 @@ export class CompradoresPage implements OnInit, OnDestroy {
     this.cargarDatos();
   }
 
-  // ionViewWillLeave se ejecuta al salir de la página
   ionViewWillLeave() {
     this.limpiarFormulario();
     this.vistaDatos = false;
@@ -55,29 +50,46 @@ export class CompradoresPage implements OnInit, OnDestroy {
   }
 
   cargarDatos() {
-      this.sub = this.dbService.obtenerCompradores().subscribe((res: Comprador[]) => {
+      // Ahora llamamos a la propiedad compradores$ en lugar del método antiguo
+      this.sub = this.dbService.compradores$.subscribe((res: Comprador[]) => {
         this.listaCompradores = res;
-        this.listaFiltrada = res; 
+        this.buscar(); 
       });
-  }
+    }
 
   alternarVista() {
     this.vistaDatos = !this.vistaDatos;
+    console.log("🔄 Cambiando vista. ¿Viendo lista de datos?:", this.vistaDatos);
+    
     if (!this.vistaDatos && !this.modoEdicion) {
       this.limpiarFormulario();
+    } else if (this.vistaDatos) {
+      this.terminoBusqueda = ''; 
+      this.listaFiltrada = [...this.listaCompradores];
+      console.log("📋 Lista lista para mostrar:", this.listaFiltrada);
     }
   }
 
-  // ================= CRUD Y FORMULARIO =================
+  buscar() {
+    const termino = this.terminoBusqueda ? this.terminoBusqueda.toLowerCase().trim() : '';
+    console.log("🔍 Buscando el término:", termino);
+    
+    if (termino === '') {
+      this.listaFiltrada = [...this.listaCompradores];
+      return;
+    }
+    
+    this.listaFiltrada = this.listaCompradores.filter(c => 
+      (c.nombres && c.nombres.toLowerCase().includes(termino)) ||
+      (c.apellidos && c.apellidos.toLowerCase().includes(termino)) ||
+      (c.cedula && c.cedula.toLowerCase().includes(termino))
+    );
+    console.log("🎯 Resultados encontrados:", this.listaFiltrada);
+  }
 
   async guardar() {
-    // Validación de campos llenos
     if (!this.comprador.nombres || !this.comprador.apellidos || !this.comprador.cedula || !this.comprador.edad || !this.comprador.domicilio) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No hay datos. Por favor, llene todos los campos.',
-        buttons: ['OK']
-      });
+      const alert = await this.alertController.create({ header: 'Error', message: 'Llene todos los campos.', buttons: ['OK'] });
       await alert.present();
       return;
     }
@@ -85,43 +97,39 @@ export class CompradoresPage implements OnInit, OnDestroy {
     try {
       if (this.modoEdicion) {
         await this.dbService.actualizarComprador(this.idEdicion, this.comprador);
-        this.mostrarMensaje('Datos actualizados correctamente');
+        this.mostrarMensaje('Datos actualizados');
         this.cancelarEdicion();
       } else {
         await this.dbService.crearComprador(this.comprador);
-        this.mostrarMensaje('Datos guardados correctamente');
+        this.mostrarMensaje('Datos guardados');
         this.limpiarFormulario();
       }
     } catch (error) {
-      this.mostrarMensaje('Ocurrió un error al guardar');
+      console.error("❌ Error al guardar:", error);
+      this.mostrarMensaje('Error al guardar');
     }
   }
 
   prepararEdicion(item: Comprador) {
     this.modoEdicion = true;
     this.idEdicion = item.id!;
-    // Copiamos los datos al formulario
     this.comprador = { ...item };
-    this.vistaDatos = false; // Regresa al formulario
+    this.vistaDatos = false; 
   }
 
   cancelarEdicion() {
     this.limpiarFormulario();
-    this.vistaDatos = true; // Regresa a la lista
+    this.vistaDatos = true;
   }
 
   async confirmarEliminacion(id: string) {
     const alert = await this.alertController.create({
       header: 'Confirmar Eliminación',
-      message: '¿De verdad quieres eliminar este registro?',
+      message: '¿Eliminar este registro?',
       buttons: [
+        { text: 'CANCELAR', role: 'cancel' },
         {
-          text: 'CANCELAR',
-          role: 'cancel'
-        },
-        {
-          text: 'ELIMINAR',
-          role: 'destructive',
+          text: 'ELIMINAR', role: 'destructive',
           handler: () => {
             this.dbService.eliminarComprador(id);
             this.mostrarMensaje('Registro eliminado');
@@ -132,21 +140,6 @@ export class CompradoresPage implements OnInit, OnDestroy {
     await alert.present();
   }
 
-  // ================= BUSCADOR =================
-
-  buscar() {
-    const termino = this.terminoBusqueda.toLowerCase().trim();
-    if (termino === '') {
-      this.listaFiltrada = this.listaCompradores;
-      return;
-    }
-    this.listaFiltrada = this.listaCompradores.filter(c => 
-      c.nombres.toLowerCase().includes(termino)
-    );
-  }
-
-  // ================= UTILIDADES =================
-
   limpiarFormulario() {
     this.comprador = { nombres: '', apellidos: '', cedula: '', edad: null, domicilio: '' };
     this.modoEdicion = false;
@@ -154,12 +147,7 @@ export class CompradoresPage implements OnInit, OnDestroy {
   }
 
   async mostrarMensaje(mensaje: string) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'bottom',
-      color: 'success'
-    });
+    const toast = await this.toastController.create({ message: mensaje, duration: 2000, position: 'bottom', color: 'success' });
     await toast.present();
   }
 }

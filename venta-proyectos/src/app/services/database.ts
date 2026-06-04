@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, collectionData, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot } from '@angular/fire/firestore';
+import { BehaviorSubject } from 'rxjs';
 import { Comprador, Vendedor } from '../models/interfaces';
 
 @Injectable({
@@ -8,53 +8,53 @@ import { Comprador, Vendedor } from '../models/interfaces';
 })
 export class DatabaseService {
 
-  constructor(private firestore: Firestore) { }
+  // Creamos "contenedores" reactivos para los datos
+  private compradoresSub = new BehaviorSubject<Comprador[]>([]);
+  public compradores$ = this.compradoresSub.asObservable();
+
+  private vendedoresSub = new BehaviorSubject<Vendedor[]>([]);
+  public vendedores$ = this.vendedoresSub.asObservable();
+
+  constructor(private firestore: Firestore) {
+    // 🚀 MÉTODO INFALIBLE: onSnapshot lee en tiempo real y evita el error '_Query'
+    onSnapshot(collection(this.firestore, 'compradores'), (snapshot) => {
+      const datos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Comprador));
+      this.compradoresSub.next(datos); // Actualiza la app al instante
+    });
+
+    onSnapshot(collection(this.firestore, 'vendedores'), (snapshot) => {
+      const datos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Vendedor));
+      this.vendedoresSub.next(datos); // Actualiza la app al instante
+    });
+  }
 
   // ==========================================
   // MÉTODOS PARA COMPRADORES
   // ==========================================
-
   crearComprador(comprador: Comprador) {
-    const compradoresRef = collection(this.firestore, 'compradores');
-    return addDoc(compradoresRef, comprador);
-  }
-
-  obtenerCompradores(): Observable<Comprador[]> {
-    const compradoresRef = collection(this.firestore, 'compradores');
-    return collectionData(compradoresRef, { idField: 'id' }) as Observable<Comprador[]>;
+    return addDoc(collection(this.firestore, 'compradores'), comprador);
   }
 
   actualizarComprador(id: string, datos: any) {
-    const compradorDocRef = doc(this.firestore, `compradores/${id}`);
-    return updateDoc(compradorDocRef, datos);
+    return updateDoc(doc(this.firestore, `compradores/${id}`), datos);
   }
 
   eliminarComprador(id: string) {
-    const compradorDocRef = doc(this.firestore, `compradores/${id}`);
-    return deleteDoc(compradorDocRef);
+    return deleteDoc(doc(this.firestore, `compradores/${id}`));
   }
 
   // ==========================================
   // MÉTODOS PARA VENDEDORES
   // ==========================================
-
   crearVendedor(vendedor: Vendedor) {
-    const vendedoresRef = collection(this.firestore, 'vendedores');
-    return addDoc(vendedoresRef, vendedor);
-  }
-
-  obtenerVendedores(): Observable<Vendedor[]> {
-    const vendedoresRef = collection(this.firestore, 'vendedores');
-    return collectionData(vendedoresRef, { idField: 'id' }) as Observable<Vendedor[]>;
+    return addDoc(collection(this.firestore, 'vendedores'), vendedor);
   }
 
   actualizarVendedor(id: string, datos: any) {
-    const vendedorDocRef = doc(this.firestore, `vendedores/${id}`);
-    return updateDoc(vendedorDocRef, datos);
+    return updateDoc(doc(this.firestore, `vendedores/${id}`), datos);
   }
 
   eliminarVendedor(id: string) {
-    const vendedorDocRef = doc(this.firestore, `vendedores/${id}`);
-    return deleteDoc(vendedorDocRef);
+    return deleteDoc(doc(this.firestore, `vendedores/${id}`));
   }
 }

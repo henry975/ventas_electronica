@@ -50,22 +50,21 @@ export class VendedoresPage implements OnInit, OnDestroy {
   }
 
   cargarDatos() {
-    this.sub = this.dbService.obtenerVendedores().subscribe((res: Vendedor[]) => {
-      this.listaVendedores = res;
-      this.listaFiltrada = res;
-    });
-  }
-
+      // Ahora llamamos a la propiedad vendedores$
+      this.sub = this.dbService.vendedores$.subscribe((res: Vendedor[]) => {
+        this.listaVendedores = res;
+        this.buscar();
+      });
+    }
   alternarVista() {
-      this.vistaDatos = !this.vistaDatos;
-      if (!this.vistaDatos && !this.modoEdicion) {
-        this.limpiarFormulario();
-      } else if (this.vistaDatos) {
-        // ESTO ES NUEVO: Al entrar a la lista, limpia el buscador para que aparezcan todos los datos
-        this.terminoBusqueda = ''; 
-        this.listaFiltrada = this.listaVendedores;
-      }
-  }
+        this.vistaDatos = !this.vistaDatos;
+        if (!this.vistaDatos && !this.modoEdicion) {
+          this.limpiarFormulario();
+        } else if (this.vistaDatos) {
+          this.terminoBusqueda = ''; 
+          this.listaFiltrada = [...this.listaVendedores];
+        }
+    }
 
   async guardar() {
     if (!this.vendedor.nombres || !this.vendedor.apellidos || !this.vendedor.proyecto || !this.vendedor.precio || !this.vendedor.domicilio) {
@@ -124,17 +123,21 @@ export class VendedoresPage implements OnInit, OnDestroy {
   }
 
   buscar() {
-      const termino = this.terminoBusqueda.toLowerCase().trim();
-      if (termino === '') {
-        this.listaFiltrada = this.listaVendedores;
-        return;
-      }
-      this.listaFiltrada = this.listaVendedores.filter(v => 
-        v.nombres.toLowerCase().includes(termino) ||
-        v.apellidos.toLowerCase().includes(termino) ||
-        v.proyecto.toLowerCase().includes(termino)
-      );
-  }
+        // Blindaje 1: Verifica que el buscador no esté nulo
+        const termino = this.terminoBusqueda ? this.terminoBusqueda.toLowerCase().trim() : '';
+        
+        if (termino === '') {
+          this.listaFiltrada = [...this.listaVendedores];
+          return;
+        }
+        
+        // Blindaje 2: Verifica que el dato de Firebase exista antes de aplicar toLowerCase()
+        this.listaFiltrada = this.listaVendedores.filter(v => 
+          (v.nombres && v.nombres.toLowerCase().includes(termino)) ||
+          (v.apellidos && v.apellidos.toLowerCase().includes(termino)) ||
+          (v.proyecto && v.proyecto.toLowerCase().includes(termino))
+        );
+    }
 
   limpiarFormulario() {
     this.vendedor = { nombres: '', apellidos: '', proyecto: '', precio: null, domicilio: '' };

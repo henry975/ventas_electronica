@@ -50,12 +50,16 @@
   </div>
 
   <div *ngIf="vistaDatos">
-    <ion-item lines="none" style="margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px;">
-      <ion-input placeholder="Buscar por nombre..." [(ngModel)]="terminoBusqueda"></ion-input>
-      <ion-button slot="end" fill="clear" (click)="buscar()">
-        <ion-icon name="search-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
+  <ion-item lines="none" style="margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px;">
+        <ion-input 
+          placeholder="Buscar nombre, apellido o cédula..." 
+          [(ngModel)]="terminoBusqueda"
+          (ngModelChange)="buscar()">
+        </ion-input>
+        <ion-button slot="end" fill="clear" (click)="buscar()">
+          <ion-icon name="search-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
 
     <ion-list>
       <ion-item *ngFor="let item of listaFiltrada">
