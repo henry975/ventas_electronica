@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar [color]="colorTema">
+    
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    
+    <ion-title>{{ titulo }}</ion-title>
+    
+    <ion-buttons slot="end" *ngIf="mostrarBotonDatos">
+      <ion-button (click)="accionBoton()">
+        <ion-icon slot="start" name="list-outline"></ion-icon>
+        DATOS
+      </ion-button>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-header>

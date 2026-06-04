@@ -1,0 +1,14 @@
+.ui-custom-btn {
+  --border-radius: 12px;
+  --box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin: 8px 0;
+  
+  &::part(native) {
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+  &::part(native):active {
+    transform: scale(0.96);
+  }
+}

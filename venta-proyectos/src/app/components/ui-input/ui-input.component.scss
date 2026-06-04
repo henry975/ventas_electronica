@@ -1,0 +1,25 @@
+ion-item {
+  /* Variables nativas de Ionic para alterar el diseño interno */
+  --background: #ffffff;
+  --border-color: transparent;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  
+  /* CSS Estándar para el contenedor */
+  margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+  /* Efecto Esmeralda al seleccionarlo */
+  &.item-has-focus {
+    border: 1px solid var(--ion-color-primary);
+    box-shadow: 0px 4px 14px rgba(16, 185, 129, 0.15);
+  }
+}
+
+ion-input {
+  font-weight: 500;
+  color: #333;
+}

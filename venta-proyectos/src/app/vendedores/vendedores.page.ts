@@ -7,13 +7,18 @@ import { Vendedor } from '../models/interfaces';
 import { Subscription } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { listOutline, searchOutline, createOutline, trashOutline, saveOutline, closeOutline } from 'ionicons/icons';
+import { UiButtonComponent } from '../components/ui-button/ui-button.component';
+import { UiInputComponent } from '../components/ui-input/ui-input.component';
+import { UiHeaderComponent } from '../components/ui-header/ui-header.component';
+import { UiListComponent } from '../components/ui-list/ui-list.component';
 
 @Component({
   selector: 'app-vendedores',
   templateUrl: './vendedores.page.html',
   styleUrls: ['./vendedores.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  // Aquí ya inyectamos el UiListComponent
+  imports: [IonicModule, CommonModule, FormsModule, UiInputComponent, UiHeaderComponent, UiListComponent, UiButtonComponent] 
 })
 export class VendedoresPage implements OnInit, OnDestroy {
   vendedor: Vendedor = { nombres: '', apellidos: '', proyecto: '', precio: null, domicilio: '' };
@@ -50,28 +55,25 @@ export class VendedoresPage implements OnInit, OnDestroy {
   }
 
   cargarDatos() {
-      this.sub = this.dbService.vendedores$.subscribe((res: Vendedor[]) => {
-        this.listaVendedores = res;
-        this.buscar();
-      });
-    }
+    this.sub = this.dbService.vendedores$.subscribe((res: Vendedor[]) => {
+      this.listaVendedores = res;
+      this.buscar();
+    });
+  }
+
   alternarVista() {
-        this.vistaDatos = !this.vistaDatos;
-        if (!this.vistaDatos && !this.modoEdicion) {
-          this.limpiarFormulario();
-        } else if (this.vistaDatos) {
-          this.terminoBusqueda = ''; 
-          this.listaFiltrada = [...this.listaVendedores];
-        }
-    }
+      this.vistaDatos = !this.vistaDatos;
+      if (!this.vistaDatos && !this.modoEdicion) {
+        this.limpiarFormulario();
+      } else if (this.vistaDatos) {
+        this.terminoBusqueda = ''; 
+        this.listaFiltrada = [...this.listaVendedores];
+      }
+  }
 
   async guardar() {
     if (!this.vendedor.nombres || !this.vendedor.apellidos || !this.vendedor.proyecto || !this.vendedor.precio || !this.vendedor.domicilio) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'No hay datos. Por favor, llene todos los campos.',
-        buttons: ['OK']
-      });
+      const alert = await this.alertController.create({ header: 'Error', message: 'No hay datos. Por favor, llene todos los campos.', buttons: ['OK'] });
       await alert.present();
       return;
     }
@@ -122,19 +124,17 @@ export class VendedoresPage implements OnInit, OnDestroy {
   }
 
   buscar() {
-        const termino = this.terminoBusqueda ? this.terminoBusqueda.toLowerCase().trim() : '';
-        
-        if (termino === '') {
-          this.listaFiltrada = [...this.listaVendedores];
-          return;
-        }
-        
-        this.listaFiltrada = this.listaVendedores.filter(v => 
-          (v.nombres && v.nombres.toLowerCase().includes(termino)) ||
-          (v.apellidos && v.apellidos.toLowerCase().includes(termino)) ||
-          (v.proyecto && v.proyecto.toLowerCase().includes(termino))
-        );
-    }
+      const termino = this.terminoBusqueda ? this.terminoBusqueda.toLowerCase().trim() : '';
+      if (termino === '') {
+        this.listaFiltrada = [...this.listaVendedores];
+        return;
+      }
+      this.listaFiltrada = this.listaVendedores.filter(v => 
+        (v.nombres && v.nombres.toLowerCase().includes(termino)) ||
+        (v.apellidos && v.apellidos.toLowerCase().includes(termino)) ||
+        (v.proyecto && v.proyecto.toLowerCase().includes(termino))
+      );
+  }
 
   limpiarFormulario() {
     this.vendedor = { nombres: '', apellidos: '', proyecto: '', precio: null, domicilio: '' };
@@ -143,9 +143,7 @@ export class VendedoresPage implements OnInit, OnDestroy {
   }
 
   async mostrarMensaje(mensaje: string) {
-    const toast = await this.toastController.create({
-      message: mensaje, duration: 2000, position: 'bottom', color: 'success'
-    });
+    const toast = await this.toastController.create({ message: mensaje, duration: 2000, position: 'bottom', color: 'success' });
     await toast.present();
   }
 }
